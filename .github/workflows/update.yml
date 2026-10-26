@@ -14,7 +14,7 @@ jobs:
   update:
     runs-on: macos-latest
     steps:
-      - uses: Homebrew/actions/setup-homebrew@master
+      - uses: Homebrew/actions/setup-homebrew@main
         id: brew
       - name: Rewrite the formula for the latest release
         id: formula

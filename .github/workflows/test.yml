@@ -18,7 +18,7 @@ jobs:
         os: [macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: Homebrew/actions/setup-homebrew@master   # taps this checkout as pagehaus/tap
+      - uses: Homebrew/actions/setup-homebrew@main   # taps this checkout as pagehaus/tap
       - run: brew install pagehaus/tap/pagehaus
       - run: brew test pagehaus/tap/pagehaus
       - run: brew audit --strict pagehaus/tap/pagehaus
