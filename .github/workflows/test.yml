@@ -1,0 +1,25 @@
+# Installs the formula from this checkout on macOS and Linux, then runs its test and Homebrew's audit.
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: Homebrew/actions/setup-homebrew@master   # taps this checkout as pagehaus/tap
+      - run: brew install pagehaus/tap/pagehaus
+      - run: brew test pagehaus/tap/pagehaus
+      - run: brew audit --strict pagehaus/tap/pagehaus
+      - run: pagehaus --version

@@ -1,0 +1,42 @@
+# Every day (or by hand from the Actions tab): if github.com/pagehaus/cli has a newer release, rewrite the formula
+# from its checksums, check that it installs, and commit it. Runs in this repository, so it needs no extra token.
+name: Update
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: macos-latest
+    steps:
+      - uses: Homebrew/actions/setup-homebrew@master
+        id: brew
+      - name: Rewrite the formula for the latest release
+        id: formula
+        working-directory: ${{ steps.brew.outputs.repository-path }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ./update-formula.sh
+          if git diff --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+          git diff --stat
+      - name: Check it installs and works
+        if: steps.formula.outputs.changed == 'true'
+        run: |
+          brew install pagehaus/tap/pagehaus
+          brew test pagehaus/tap/pagehaus
+          brew audit --strict pagehaus/tap/pagehaus
+      - name: Commit
+        if: steps.formula.outputs.changed == 'true'
+        working-directory: ${{ steps.brew.outputs.repository-path }}
+        run: |
+          version=$(sed -n 's/^  version "\(.*\)"/\1/p' Formula/pagehaus.rb)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "pagehaus $version"
+          git push
