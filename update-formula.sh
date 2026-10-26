@@ -18,7 +18,6 @@ cat > Formula/pagehaus.rb <<RUBY
 class Pagehaus < Formula
   desc "Preview, check and deploy plain HTML sites, with Server Side Includes"
   homepage "https://pagehaus.app/cli"
-  version "$version"
   license "MIT"
 
   on_macos do

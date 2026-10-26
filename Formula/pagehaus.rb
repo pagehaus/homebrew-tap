@@ -2,7 +2,6 @@
 class Pagehaus < Formula
   desc "Preview, check and deploy plain HTML sites, with Server Side Includes"
   homepage "https://pagehaus.app/cli"
-  version "0.1.1"
   license "MIT"
 
   on_macos do

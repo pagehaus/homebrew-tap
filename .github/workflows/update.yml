@@ -35,7 +35,7 @@ jobs:
         if: steps.formula.outputs.changed == 'true'
         working-directory: ${{ steps.brew.outputs.repository-path }}
         run: |
-          version=$(sed -n 's/^  version "\(.*\)"/\1/p' Formula/pagehaus.rb)
+          version=$(sed -n 's|.*/releases/download/v\([^/]*\)/.*|\1|p' Formula/pagehaus.rb | head -1)
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am "pagehaus $version"
